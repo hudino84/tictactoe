@@ -46,8 +46,7 @@ public class Main {
                     actualGameState = GameState.PLAY;
                     continue;
                 }
-
-                break;
+                
             }
 
             activePlayer = switchPlayer(activePlayer);
