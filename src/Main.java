@@ -7,11 +7,15 @@ public class Main {
         final Scanner scanner = new Scanner(System.in);
         char[] board = new char[9];
         char[] players = {'X', 'O'};
+        enum GameState { PLAY, DRAW, WINNER}
 
         prepareBoard(board);
 
         int activePlayer = 0;
-        while(true) {
+
+        GameState actualGameState = GameState.PLAY;
+
+        while(actualGameState == GameState.PLAY) {
             printBoard(board);
 
             System.out.println("Player " + players[activePlayer] + " is playing, enter number (1 - " + board.length + ")");
@@ -21,26 +25,28 @@ public class Main {
 
             board[position-1] = players[activePlayer];
 
-            if(checkWinner(board)) {
-                printBoard(board);
-                System.out.println("Game is over. The winner is " + players[activePlayer] + "!");
-
-                if(newGame(scanner)) {
-                    prepareBoard(board);
-                    continue;
-                }
-
-                break;
+            if (checkWinner(board)) {
+                actualGameState = GameState.WINNER;
+            } else if (isDraw(board)) {
+                actualGameState = GameState.DRAW;
             }
 
-            if(isDraw(board)) {
+            if( actualGameState != GameState.PLAY) {
                 printBoard(board);
-                System.out.println("Game is over. The result is draw!");
+
+                if (actualGameState == GameState.WINNER) {
+                    System.out.println("Game is over. The winner is " + players[activePlayer] + "!");
+                } else if (actualGameState == GameState.DRAW) {
+                    System.out.println("Game is over. The result is draw!");
+                }
 
                 if(newGame(scanner)) {
+                    activePlayer = 0;
                     prepareBoard(board);
+                    actualGameState = GameState.PLAY;
                     continue;
                 }
+
                 break;
             }
 
@@ -80,16 +86,10 @@ public class Main {
             return true;
         }
 
-        if (
-                board[2] != ' '
-                        && board[2] == board[threshold + 1]
-                        && board[2] == board[threshold * 2]
-        ) {
-            return true;
-        }
-
-
-        return false;
+        //chek last diagonal
+        return board[2] != ' '
+                && board[2] == board[threshold + 1]
+                && board[2] == board[threshold * 2];
     }
 
     public static boolean verifyPosition(char[] board, int position) {
@@ -110,8 +110,7 @@ public class Main {
         return activePlayer == 1 ? 0 : 1;
     }
 
-
-    public static char[] prepareBoard(char[] board) {
+    public static void prepareBoard(char[] board) {
         Arrays.fill(board, ' ');
     }
 
