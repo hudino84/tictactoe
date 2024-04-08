@@ -4,9 +4,11 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        final int BOARD_SIZE = 9;
+
         final Scanner scanner = new Scanner(System.in);
-        char[] board = new char[9];
-        char[] players = {'X', 'O'};
+        final char[] board = new char[BOARD_SIZE];
+        final char[] players = {'X', 'O'};
         enum GameState { PLAY, DRAW, WINNER}
 
         prepareBoard(board);
